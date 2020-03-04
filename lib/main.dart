@@ -1,105 +1,155 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
-/**
- * Created by wangjiao on 2020/3/3.
- * description:
- */
+import 'package:english_words/english_words.dart';
 
-
-void main(){
-   runApp(MyApp());
-}
+void main()=> runApp(new MyApp());
 
 /**
-*  这个widget是应用顶层的widget
-*  widget有两种：无状态   StatelessWidget
- *               有状态   StatefulWidget
+*
 */
 class MyApp extends StatelessWidget{
-    @override
-    Widget build(BuildContext context) {
-    //创建内容
-      return MaterialApp(
-         title:'our first Flutter app',
-         //应用的主页
-        home:Scaffold(
-          appBar: AppBar(
-            title: Text('Flutter rolling demo'),
-          ),
-          //因为flutter所有东西都是widget，而按钮在中间，因此用center来实现
-          body: Center(
-//            child: RaisedButton(onPressed: _onPressed(context),child:Text('roll')),
-          child: RollingButtion(),
-          ),
-        ),
-      );
-  }
-
-  void _onPressed(BuildContext context){
-    debugPrint('_onPressed');
-    showDialog(context: context,builder: (_){
-      return AlertDialog(
-        content: Text('AlertDialog'),
-      );
-    });
-  }
-
-}
-
-class RollingButtion extends StatefulWidget{
   @override
-  State<StatefulWidget> createState() {
-    return _RollingState();
+  Widget build(BuildContext context) {
+    final wordPair = new WordPair.random();
+    
+    return  new MaterialApp(
+//      title: 'welcome to Flutter',
+//      home: new Scaffold(
+//        appBar: new AppBar(title: new Text('welcome to Flutter2'),),
+//        body: new Center(
+////            child: new Text('hello world'),
+////        child: new Text(wordPair.asPascalCase),
+//        child: new RandomWords(),//==============这里就是返回一个有状态的组件
+//        ),
+//      ),
+
+    /** MyApp江油RandomWordsState 来管理，这使得用户更容易在APP顶栏中更换界面 */
+      title: 'hello chloe',
+      theme: new ThemeData(primaryColor: Colors.lightGreen),//==============改变主题
+      home: new RandomWords(),
+    );
   }
+
 }
-//这里的泛型参数是 RollingButton
-//class _RollingState extends State<RollingButtion>{
-//  @override
-//  Widget build(BuildContext context) {
-//      return RaisedButton(
-//        child: Text('Roll'),
-//        onPressed: _onPressed,
-//      );
-//  }
-//
-//  void _onPressed(){
-//    debugPrint('_rollingState _onPressed');
-//    showDialog(context: context,builder: (_){
-//      return AlertDialog(
-//        content: Text('AlertDialog'),
-//      );
-//    });
-//  }
-//
-//}
 
+/**
+ *   stateless组件不可变，他们的属性是不能改变的，所有的值都是final
+ *  stateful组件可以保存状态，它在声明周期内可以改变状态。
+ *         实现这个需要两个类：statefulWidget  state
+ * statefulWidget本身不可变，但state是可变的，并存在生命周期
+ *
+ * 创建一个有状态的randomWords，然后，创建它的状态类，RandomWordsState，这个类保存喜欢的单词
+ */
 
-class _RollingState extends State<RollingButtion>{
-  final _random = Random();
-  List<int> _roll(){
-    final roll1 = _random.nextInt(6)+1;
-    final roll2 = _random.nextInt(6)+1;
-    return [roll1,roll2];
+class RandomWords extends StatefulWidget {
+  @override
+  createState() => new RandomWordsState();
+}
+class RandomWordsState extends State<RandomWords>{
+  /** dart中下划线代表私有变量 */
+  final _suggestions = <WordPair>[];
+  final _biggerFont = const TextStyle(fontSize: 18.0);
+  final _saved = new Set<WordPair>();//set优于list,因为set不允许有重复
+  @override
+  Widget build(BuildContext context) {
+//    final wordPair = new WordPair.random();
+//    return new Text(wordPair.asPascalCase);
+  return new Scaffold(
+    appBar: new AppBar(
+        title: new Text('Startup Name Generator'),
+        /** 有些组件的子组件是单个组件（child). 另一些组件，像action的子组件是一个组件数组（children),用方括号表示[] */
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved)
+        ],
+    ),
+
+    body: _buildSuggestions(),
+  );
   }
-  void _onPressed(){
-    debugPrint('_RollingState._onPressed');
-    final rollResults = _roll();
-    showDialog(
-        context: context,
-        builder: (_){
-          return AlertDialog(
-            content: Text("随机数是：(${rollResults[0]},${rollResults[1]})"),
-          );
+
+  Widget _buildSuggestions(){
+    return new ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+        /**
+        *  这里是每次生成一个单词对 时 ，被调用
+         *  对于奇数行，添加一个 divider组件 分隔单词
+         *  对于偶数行，添加一个 ListTile 组件保存单词
+         *
+        *
+        */
+        itemBuilder: (context ,i ){
+          if(i.isOdd) return new Divider();
+          /** 这个表达式，能计算出真实的 单词对 量。 因为有分割线。 */
+          final index = i~/2;
+          //==============如果到达底部
+          if(index>=_suggestions.length){
+            //==============生成10个单词对
+            debugPrint('又增加10条');
+              _suggestions.addAll(generateWordPairs().take(10));
+          }
+          /** 每次生成单词对 时，都会调用这个方法 */
+          return _buildRow(_suggestions[index]);
         }
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-        child: Text('Roll'),
-        onPressed: _onPressed,
-      );
+  Widget _buildRow(WordPair pair){
+    final alreadySaved = _saved.contains(pair);
+    /** 用listTile 来显示每个单词对 */
+     return new ListTile(
+       title: new Text(
+         pair.asPascalCase,
+         style: _biggerFont,
+       ),
+       /** 添加心形图标 */
+       trailing: new Icon(
+         alreadySaved ? Icons.favorite : Icons.favorite_border,
+         color: alreadySaved ? Colors.red : null,
+       ),
+       onTap: (){
+         /** 图标被点击，会调用setState这个回调
+          *
+          *  flutter是响应式框架，调用setState会触发State对象的 build方法，从而UI 更新
+          *
+          */
+         setState(() {
+           if(alreadySaved){
+             _saved.remove(pair);
+           }else{
+             _saved.add(pair);
+           }
+         });
+       },
+     );
+  }
+
+  Widget _pushSaved(){
+    /** 添加一条新路径 */
+    Navigator.of(context).push(
+      new MaterialPageRoute(
+          builder: (context){
+            final tiles = _saved.map(
+                (pair){
+                  /** 生成列表行 */
+                  return new ListTile(title: new Text(
+                    pair.asPascalCase,
+                    style: _biggerFont,
+                  ),);
+                },
+            );
+            /** 在每行之间 添加水平间距 */
+            final divided = ListTile.divideTiles(tiles: tiles,context: context).toList();
+            
+            /** builder返回一个Scaffold组件，这组件包含appbar 和 列表 */
+            return new Scaffold(
+              appBar: new AppBar(
+                title: new Text('save suggestions'),
+              ),
+              body: new ListView(children:divided),
+            );
+            
+          }
+      )
+    );
   }
 
 }
