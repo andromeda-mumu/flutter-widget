@@ -1,155 +1,227 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
+void main()=>runApp(new MyApp());
 
-void main()=> runApp(new MyApp());
-
-/**
-*
-*/
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    final wordPair = new WordPair.random();
-    
-    return  new MaterialApp(
-//      title: 'welcome to Flutter',
-//      home: new Scaffold(
-//        appBar: new AppBar(title: new Text('welcome to Flutter2'),),
-//        body: new Center(
-////            child: new Text('hello world'),
-////        child: new Text(wordPair.asPascalCase),
-//        child: new RandomWords(),//==============这里就是返回一个有状态的组件
-//        ),
-//      ),
+      return new MaterialApp(
+        title: '第三关',
+        home: new Scaffold(
+          appBar: new AppBar(title:new Text('hello chole')),
+          body: new Center(
+//              child:new Text('哈哈')
+//          child: new TestWidget(),//==============文本测试成功
+//          child: new ImageWidget(),//==============图片测试成功
+//          child: new MyButtonWidget(),//==============按钮测试成功
+//            child: new MessageForm(),//==============输入框测试成功
+//          child: new MyLayoutWidget(),//==============布局测试成功
+//          child: new MyRowWidget(),//==============水平布局测试成功
+//          child: new MyColWidget(),//==============垂直布局测试成功
+//          child: new MyExpandWidget(),//==============垂直布局测试成功
+//          child: new MyStackWidget(),//==============层叠布局测试成功
 
-    /** MyApp江油RandomWordsState 来管理，这使得用户更容易在APP顶栏中更换界面 */
-      title: 'hello chloe',
-      theme: new ThemeData(primaryColor: Colors.lightGreen),//==============改变主题
-      home: new RandomWords(),
+          child: new ImageWidget(),
+          ),
+        ),
+      );
+  }
+}
+
+/** 文本 */
+class TestWidget extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Text('这里放文本内容',
+      style: TextStyle(//==============文本样式
+        color: Colors.blue,
+        fontSize: 16.0,
+        fontWeight: FontWeight.bold
+      ),
     );
   }
 
 }
 
 /**
- *   stateless组件不可变，他们的属性是不能改变的，所有的值都是final
- *  stateful组件可以保存状态，它在声明周期内可以改变状态。
- *         实现这个需要两个类：statefulWidget  state
- * statefulWidget本身不可变，但state是可变的，并存在生命周期
- *
- * 创建一个有状态的randomWords，然后，创建它的状态类，RandomWordsState，这个类保存喜欢的单词
- */
-
-class RandomWords extends StatefulWidget {
-  @override
-  createState() => new RandomWordsState();
-}
-class RandomWordsState extends State<RandomWords>{
-  /** dart中下划线代表私有变量 */
-  final _suggestions = <WordPair>[];
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-  final _saved = new Set<WordPair>();//set优于list,因为set不允许有重复
+* 图片 (网络，文件，资源，内存)
+ * Image.asset(name)
+ * Image.file(file);
+ * Image.memory(bytes);
+ * Image.network(src)
+*
+*/
+class ImageWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-//    final wordPair = new WordPair.random();
-//    return new Text(wordPair.asPascalCase);
-  return new Scaffold(
-    appBar: new AppBar(
-        title: new Text('Startup Name Generator'),
-        /** 有些组件的子组件是单个组件（child). 另一些组件，像action的子组件是一个组件数组（children),用方括号表示[] */
-        actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.list), onPressed: _pushSaved)
-        ],
-    ),
+//    return Image.network("https://www.baidu.com/img/superlogo_c4d7df0a003d3db9b65e9ef0fe6da1ec.png?where=super",
+//      width: 200,
+//      height:200,
+//    );
+  return Image.asset('image/star.png',
+          width: 200,
+          height: 200,
 
-    body: _buildSuggestions(),
   );
   }
+}
 
-  Widget _buildSuggestions(){
-    return new ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-        /**
-        *  这里是每次生成一个单词对 时 ，被调用
-         *  对于奇数行，添加一个 divider组件 分隔单词
-         *  对于偶数行，添加一个 ListTile 组件保存单词
-         *
-        *
-        */
-        itemBuilder: (context ,i ){
-          if(i.isOdd) return new Divider();
-          /** 这个表达式，能计算出真实的 单词对 量。 因为有分割线。 */
-          final index = i~/2;
-          //==============如果到达底部
-          if(index>=_suggestions.length){
-            //==============生成10个单词对
-            debugPrint('又增加10条');
-              _suggestions.addAll(generateWordPairs().take(10));
-          }
-          /** 每次生成单词对 时，都会调用这个方法 */
-          return _buildRow(_suggestions[index]);
-        }
+/** 按钮 (flatButton与RaisedButton 类似)*/
+class MyButtonWidget extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    var flatBtn= FlatButton(
+      onPressed: ()=>print('Flatbutton pressed'),
+//      child: Text('BUTTON'),
+      child: new ImageWidget(),
     );
-  }
-
-  Widget _buildRow(WordPair pair){
-    final alreadySaved = _saved.contains(pair);
-    /** 用listTile 来显示每个单词对 */
-     return new ListTile(
-       title: new Text(
-         pair.asPascalCase,
-         style: _biggerFont,
-       ),
-       /** 添加心形图标 */
-       trailing: new Icon(
-         alreadySaved ? Icons.favorite : Icons.favorite_border,
-         color: alreadySaved ? Colors.red : null,
-       ),
-       onTap: (){
-         /** 图标被点击，会调用setState这个回调
-          *
-          *  flutter是响应式框架，调用setState会触发State对象的 build方法，从而UI 更新
-          *
-          */
-         setState(() {
-           if(alreadySaved){
-             _saved.remove(pair);
-           }else{
-             _saved.add(pair);
-           }
-         });
-       },
-     );
-  }
-
-  Widget _pushSaved(){
-    /** 添加一条新路径 */
-    Navigator.of(context).push(
-      new MaterialPageRoute(
-          builder: (context){
-            final tiles = _saved.map(
-                (pair){
-                  /** 生成列表行 */
-                  return new ListTile(title: new Text(
-                    pair.asPascalCase,
-                    style: _biggerFont,
-                  ),);
-                },
-            );
-            /** 在每行之间 添加水平间距 */
-            final divided = ListTile.divideTiles(tiles: tiles,context: context).toList();
-            
-            /** builder返回一个Scaffold组件，这组件包含appbar 和 列表 */
-            return new Scaffold(
-              appBar: new AppBar(
-                title: new Text('save suggestions'),
-              ),
-              body: new ListView(children:divided),
-            );
-            
-          }
-      )
+    var raisedButton = RaisedButton(
+      onPressed: ()=>print('RaisedButton pressed'),
+    /** child接收一个widget,可以是任意的  */
+//      child: Text('BUTTON'),
+    child: new ImageWidget(),
     );
+//    return raisedButton;
+  return flatBtn;
+
   }
 
 }
+
+/** 文本输入框 */
+/**
+* flutter中的文本输入框 叫做 TextField
+* 为了获得用户输入的文本，需要设置一个controller，从这个controller中拿到文本框的内容
+*/
+class MessageForm extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _MessageFormState();
+  }
+}
+class _MessageFormState extends State<MessageForm>{
+  var editController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        /** expanded 代表沾满一行里 除了RaisedButton外的所有空间 */
+        Expanded(child: TextField(controller: editController,),),
+        RaisedButton(
+          child: Text('click'),
+//          onPressed: ()=>print('text inputted: ${editController.text}'),
+          /** 显示弹框 */
+          onPressed: (){
+            showDialog(context: context,builder: (_){
+              return AlertDialog(
+                content: Text(editController.text),
+                actions: <Widget>[
+                  //点击按钮，关闭弹窗
+                  FlatButton(child: Text('ok'),onPressed: ()=>Navigator.pop(context),)
+                ],
+              );
+            });
+          },
+        )
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    editController.dispose();
+  }
+
+}
+
+/** 最简单的布局，container  padding Center */
+class MyLayoutWidget extends StatelessWidget{
+    @override
+  Widget build(BuildContext context) {
+     return Container(
+//       child: Text('text',style:TextStyle(color: Colors.white) ,),
+     child: Center(child: Text('text',style:TextStyle(color: Colors.white) ,),),
+       padding: EdgeInsets.all(8.0),
+       margin: EdgeInsets.all(4.0),
+       width: 80,
+       decoration: BoxDecoration(
+         color: Colors.blue,
+         borderRadius: BorderRadius.circular(5),
+       ),
+     );
+  }
+}
+
+/** 水平，竖直布局和expand */
+class MyRowWidget extends StatelessWidget{
+    @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Text('text1'),
+        Text('text2'),
+        Text('text3'),
+        Text('text4'),
+        Text('text5'),
+      ],
+    );
+  }
+}
+
+class MyColWidget extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+     return Column(
+       children: <Widget>[
+         Text('text1'),
+         Text('text2'),
+         Text('text3'),
+         Text('text4'),
+         Text('text5'),
+         Text('text6'),
+       ],
+     );
+  }
+}
+
+/** expand 可以设置fiex参数，划分比例占用空间。类似android 的weight 权重 */
+class MyExpandWidget extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+     return Row(
+       children: <Widget>[
+         Expanded(
+           flex:2, //==============占比全屏宽度的2/3
+           child: RaisedButton(child: Text('btn1'),onPressed: null,),
+         ),
+         Expanded(
+           flex: 1,
+           child: RaisedButton(child: Text('btn2'),onPressed: null),
+         )
+       ],
+     );
+  }
+}
+
+/** Stack布局 （一个控件跌在另一个控件上）*/
+class MyStackWidget extends StatelessWidget{
+    @override
+  Widget build(BuildContext context) {
+    return Stack(
+      /** aligment取值范围[-1,1]。stack中心为（0,0）下面0.5是让文本对齐到1/4处 */
+      alignment: const Alignment(-0.5, -0.5),
+      children: <Widget>[
+        Container(
+          width: 200,
+          height: 200,
+          color: Colors.blue,
+        ),
+        Text('foobar'),
+      ],
+    );
+  }
+}
+
+
+
