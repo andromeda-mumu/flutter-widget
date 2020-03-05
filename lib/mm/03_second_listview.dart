@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
  * Created by wangjiao on 2020/3/5.
  * description: 第三关，第二个小实战
  */
- void main()=>runApp(new MyApp());
+void main()=>runApp(new MyApp());
 
 class MyApp extends StatelessWidget{
   @override
@@ -34,13 +34,13 @@ class MyApp extends StatelessWidget{
 
 
 
-     return MaterialApp(
-       title: 'hhh',
-       home:Scaffold(
-         appBar: new AppBar(title: Text('哈哈哈'),),
-         body: new BuildingListView(buildings,(index)=>debugPrint('item $index clicked')),
-       )
-     );
+    return MaterialApp(
+        title: 'hhh',
+        home:Scaffold(
+          appBar: new AppBar(title: Text('哈哈哈'),),
+          body: new BuildingListView(buildings,(index)=>debugPrint('item $index clicked')),
+        )
+    );
   }
 }
 
@@ -105,12 +105,12 @@ class BuildingListView extends StatelessWidget{
   BuildingListView(this.buildings,this.listener);
   @override
   Widget build(BuildContext context) {
-     return ListView.builder(
-       itemCount:buildings.length,
-       itemBuilder:(context,index){
-         return new ItemView(index,buildings[index],listener);
-       }
-     );
+    return ListView.builder(
+        itemCount:buildings.length,
+        itemBuilder:(context,index){
+          return new ItemView(index,buildings[index],listener);
+        }
+    );
   }
 }
 
