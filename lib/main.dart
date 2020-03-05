@@ -8,10 +8,11 @@ void main()=>runApp(new MyApp());
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
+
       return MaterialApp(
         title: '第一个实战',
         home: Scaffold(
-          appBar: new AppBar(title:new Text('appbar')),
+          appBar: new AppBar(title:new Text('第一个小实战')),
 //          body: Image.asset('images/star.png',
 //            width:200,
 //            height:200,
@@ -33,10 +34,12 @@ class MyApp extends StatelessWidget{
 //            ],
 //          ),
 //        ),
-        body: _TextSection(),
+//        body: _TextSection(),
+        body: _ImageSection(),
         )
       );
   }
+
 
 
   /** 方法创建widget  类似android的自定义view */
@@ -63,6 +66,16 @@ class MyApp extends StatelessWidget{
  }
 }
 
+class _ImageSection extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset('images/haha.png',
+      width: 600,
+      height: 240,
+      fit: BoxFit.cover,
+    );
+  }
+}
 class _TitleSection extends StatelessWidget {
   final String title;
   final String subtitle;
