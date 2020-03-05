@@ -8,34 +8,43 @@ void main()=>runApp(new MyApp());
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
+    final imgSection = _ImageSection();
+    final titleSection =_TitleSection( 'Oeschinen Lake Campground', 'Kandersteg, Switzerland', 41);
+    final midSection = new Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          _MidWidget(Icons.call, 'CALL'),
+          _MidWidget(Icons.near_me, 'ROUTE'),
+          _MidWidget(Icons.share, 'SHATE'),
+        ],
+      ),
+    );
 
+    final descSection =_TextSection();
       return MaterialApp(
         title: '第一个实战',
         home: Scaffold(
           appBar: new AppBar(title:new Text('第一个小实战')),
-//          body: Image.asset('images/star.png',
-//            width:200,
-//            height:200,
-//            fit: BoxFit.cover,//类似于fitxy吧，图片铺满组件的大小
-//          ),
-//        body:new _TitleSection("我要认真", '我要努力', 100)//==============没有圈定范围，导致icon与数字都在屏幕中间。与文字没在一行
-//        body: new Container(
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          /** 使用column可以实现  */
+//          body: new Column(
 //            children: <Widget>[
-//              /** 用类创建一个个的widget */
-//              _MidWidget(Icons.call, 'CALL'),
-//              _MidWidget(Icons.near_me, 'ROUTE'),
-//              _MidWidget(Icons.share, 'SHATE'),
-//            /** 用方法创建 一个个的widget 也可以 */
-////            _buildButton(context,Icons.call, 'CALL'),
-////            _buildButton(context,Icons.near_me, 'ROUTE'),
-////            _buildButton(context,Icons.share, 'SHATE'),
+//              imgSection,
+//              titleSection,
+//              midSection,
+//              descSection
 //            ],
-//          ),
-//        ),
-//        body: _TextSection(),
-        body: _ImageSection(),
+//          )
+        
+        /** 与上面实现效果一样 */
+        body:ListView(
+          children: <Widget>[
+              imgSection,
+              titleSection,
+              midSection,
+              descSection
+          ],
+        )
         )
       );
   }
