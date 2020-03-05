@@ -1,176 +1,118 @@
 import 'package:flutter/material.dart';
 /**
  * Created by wangjiao on 2020/3/5.
- * description: 第三关，小实战
+ * description: 第三关，第二个小实战
  */
+ void main()=>runApp(new MyApp());
 
-void main()=>runApp(new MyApp());
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    final imgSection = _ImageSection();
-    final titleSection =_TitleSection( 'Oeschinen Lake Campground', 'Kandersteg, Switzerland', 41);
-    final midSection = new Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _MidWidget(Icons.call, 'CALL'),
-          _MidWidget(Icons.near_me, 'ROUTE'),
-          _MidWidget(Icons.share, 'SHATE'),
-        ],
-      ),
-    );
+    final buildings =[
+      Building(BuildingType.theater, 'CineArts at the Empire', '85 W Portal Ave'),
+      Building(BuildingType.restaurnt,  'The Castro Theater', '429 Castro St'),
+      Building(BuildingType.theater,'Alamo Drafthouse Cinema', '2550 Mission St'),
+      Building(BuildingType.theater, 'Roxie Theater', '3117 16th St'),
+      Building(BuildingType.restaurnt, 'United Artists Stonestown Twin', '501 Buckingham Way'),
+      Building(BuildingType.restaurnt, 'AMC Metreon 16', '135 4th St #3000'),
+      Building(BuildingType.theater, 'K\'s Kitchen', '1923 Ocean Ave'),
+      Building(BuildingType.restaurnt, 'Chaiya Thai Restaurant', '72 Claremont Blvd'),
+      Building(BuildingType.theater, 'La Ciccia', '291 30th St'),
 
-    final descSection =_TextSection();
-      return MaterialApp(
-        title: '第一个实战',
-        home: Scaffold(
-          appBar: new AppBar(title:new Text('第一个小实战')),
-          /** 使用column可以实现  */
-//          body: new Column(
-//            children: <Widget>[
-//              imgSection,
-//              titleSection,
-//              midSection,
-//              descSection
-//            ],
-//          )
-        
-        /** 与上面实现效果一样 */
-        body:ListView(
-          children: <Widget>[
-              imgSection,
-              titleSection,
-              midSection,
-              descSection
-          ],
-        )
-        )
-      );
-  }
+      Building(BuildingType.theater, 'CineArts at the Empire', '85 W Portal Ave'),
+      Building(BuildingType.restaurnt,  'The Castro Theater', '429 Castro St'),
+      Building(BuildingType.theater,'Alamo Drafthouse Cinema', '2550 Mission St'),
+      Building(BuildingType.theater, 'Roxie Theater', '3117 16th St'),
+      Building(BuildingType.restaurnt, 'United Artists Stonestown Twin', '501 Buckingham Way'),
+      Building(BuildingType.restaurnt, 'AMC Metreon 16', '135 4th St #3000'),
+      Building(BuildingType.theater, 'K\'s Kitchen', '1923 Ocean Ave'),
+      Building(BuildingType.restaurnt, 'Chaiya Thai Restaurant', '72 Claremont Blvd'),
+      Building(BuildingType.theater, 'La Ciccia', '291 30th St'),
+
+
+    ];
 
 
 
-  /** 方法创建widget  类似android的自定义view */
- Widget _buildButton(BuildContext context,IconData icon,String text){
-   final color = Theme.of(context).primaryColor;
-   return Column(
-     mainAxisSize: MainAxisSize.min,
-     mainAxisAlignment: MainAxisAlignment.center,
-     children: <Widget>[
-       Icon(icon,color:color),
-       Container(
-         margin: const EdgeInsets.only(top:8),
-         child: Text(
-             text,
-             style:TextStyle(
-               fontSize: 12,
-               fontWeight: FontWeight.w400,
-               color:color,
-             )
-         ),
+     return MaterialApp(
+       title: 'hhh',
+       home:Scaffold(
+         appBar: new AppBar(title: Text('哈哈哈'),),
+         body: new BuildingListView(buildings,(index)=>debugPrint('item $index clicked')),
        )
-     ],
-   );
- }
-}
-
-class _ImageSection extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset('images/haha.png',
-      width: 600,
-      height: 240,
-      fit: BoxFit.cover,
-    );
-  }
-}
-class _TitleSection extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final int startCount;
-
-  _TitleSection(this.title, this.subtitle, this.startCount);
-
-  @override
-  Widget build(BuildContext context) {
-    /** 为了给整个布局加padding,所有套个container */
-    return Container(
-      padding: EdgeInsets.all(32),
-      child: Row(
-        children: <Widget>[
-          /** 为了让title沾满屏幕宽度的剩余空间，所有用Expanded包着 */
-          Expanded(
-            /** Expanded只能包含一个子元素。因此要用column来做 */
-            child: Column(
-              /** 让文本水平方向对齐start */
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Text(subtitle,
-                  style: TextStyle(color: Colors.grey[500]),
-                )
-              ],
-            ),
-          ),
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
-          ),
-          Text(startCount.toString())
-        ],
-      ),
-    );
-  }
-}
-class _MidWidget extends StatelessWidget{
-  final IconData icon;
-  final String text;
-  _MidWidget(this.icon,this.text);
-  @override
-  Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryColor;
-      return Column(
-        /** main axis与cross axis相对应，竖直方向对齐 。*/
-        /** 放置完子控件后，屏幕还有剩余空间，min表示尽量少占用 .类似android的wrap_content*/
-        mainAxisSize: MainAxisSize.min,//max的话，那就是会在整个屏幕的中间。而min则整体都在屏幕的上面
-        /** 居中 */
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(icon,color:color),
-          Container(
-            margin: const EdgeInsets.only(top:8),
-            child: Text(
-              text,
-              style:TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color:color,
-              )
-            ),
-          )
-        ],
-      );
-  }
-}
-class _TextSection extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-     return Container(
-       padding: const EdgeInsets.all(32),
-       child: Text(
-         '''
-         Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese Alps. Situated 1,578 meters above sea level, it is one of the larger Alpine Lakes. A gondola ride from Kandersteg, followed by a half-hour walk through pastures and pine forest, leads you to the lake, which warms to 20 degrees Celsius in the summer. Activities enjoyed here include rowing, and riding the summer toboggan run.
-
-         ''',
-         softWrap: true,
-       ),
      );
   }
 }
+
+/** 创建数据模型 */
+enum BuildingType{theater,restaurnt}
+
+class Building{
+  final BuildingType type;
+  final String title;
+  final String address;
+  Building(this.type,this.title,this.address);
+}
+
+/** 实现每个item的UI */
+class ItemView extends StatelessWidget{
+  final int position;
+  final Building building;
+  final OnItemClickListener listener;
+  ItemView(this.position,this.building,this.listener);
+  @override
+  Widget build(BuildContext context) {
+    final icon = Icon(
+      building.type == BuildingType.restaurnt?Icons.restaurant:Icons.theaters,
+      color: Colors.blue[500],
+    );
+
+    final widget = Row(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(16),
+          child: icon,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                building.title,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(building.address)
+            ],
+          ),
+        )
+      ],
+    );
+    return InkWell(
+      onTap: ()=>listener(position),
+      child: widget,
+    );
+  }
+
+}
+
+/** listview，由于渲染机制不同，因此不需要adapter来管理listview */
+class BuildingListView extends StatelessWidget{
+  final List<Building> buildings;
+  final OnItemClickListener listener;
+  BuildingListView(this.buildings,this.listener);
+  @override
+  Widget build(BuildContext context) {
+     return ListView.builder(
+       itemCount:buildings.length,
+       itemBuilder:(context,index){
+         return new ItemView(index,buildings[index],listener);
+       }
+     );
+  }
+}
+
+/** 回调接口 */
+typedef OnItemClickListener = void Function(int position);
