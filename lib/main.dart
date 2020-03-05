@@ -1,227 +1,154 @@
 import 'package:flutter/material.dart';
-void main()=>runApp(new MyApp());
+/**
+ * Created by wangjiao on 2020/3/5.
+ * description: 第三关，小实战
+ */
 
+void main()=>runApp(new MyApp());
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-      return new MaterialApp(
-        title: '第三关',
-        home: new Scaffold(
-          appBar: new AppBar(title:new Text('hello chole')),
-          body: new Center(
-//              child:new Text('哈哈')
-//          child: new TestWidget(),//==============文本测试成功
-//          child: new ImageWidget(),//==============图片测试成功
-//          child: new MyButtonWidget(),//==============按钮测试成功
-//            child: new MessageForm(),//==============输入框测试成功
-//          child: new MyLayoutWidget(),//==============布局测试成功
-//          child: new MyRowWidget(),//==============水平布局测试成功
-//          child: new MyColWidget(),//==============垂直布局测试成功
-//          child: new MyExpandWidget(),//==============垂直布局测试成功
-//          child: new MyStackWidget(),//==============层叠布局测试成功
-
-          child: new ImageWidget(),
-          ),
-        ),
+      return MaterialApp(
+        title: '第一个实战',
+        home: Scaffold(
+          appBar: new AppBar(title:new Text('appbar')),
+//          body: Image.asset('images/star.png',
+//            width:200,
+//            height:200,
+//            fit: BoxFit.cover,//类似于fitxy吧，图片铺满组件的大小
+//          ),
+//        body:new _TitleSection("我要认真", '我要努力', 100)//==============没有圈定范围，导致icon与数字都在屏幕中间。与文字没在一行
+//        body: new Container(
+//          child: Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//            children: <Widget>[
+//              /** 用类创建一个个的widget */
+//              _MidWidget(Icons.call, 'CALL'),
+//              _MidWidget(Icons.near_me, 'ROUTE'),
+//              _MidWidget(Icons.share, 'SHATE'),
+//            /** 用方法创建 一个个的widget 也可以 */
+////            _buildButton(context,Icons.call, 'CALL'),
+////            _buildButton(context,Icons.near_me, 'ROUTE'),
+////            _buildButton(context,Icons.share, 'SHATE'),
+//            ],
+//          ),
+//        ),
+        body: _TextSection(),
+        )
       );
   }
+
+
+  /** 方法创建widget  类似android的自定义view */
+ Widget _buildButton(BuildContext context,IconData icon,String text){
+   final color = Theme.of(context).primaryColor;
+   return Column(
+     mainAxisSize: MainAxisSize.min,
+     mainAxisAlignment: MainAxisAlignment.center,
+     children: <Widget>[
+       Icon(icon,color:color),
+       Container(
+         margin: const EdgeInsets.only(top:8),
+         child: Text(
+             text,
+             style:TextStyle(
+               fontSize: 12,
+               fontWeight: FontWeight.w400,
+               color:color,
+             )
+         ),
+       )
+     ],
+   );
+ }
 }
 
-/** 文本 */
-class TestWidget extends StatelessWidget{
+class _TitleSection extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final int startCount;
+
+  _TitleSection(this.title, this.subtitle, this.startCount);
+
   @override
   Widget build(BuildContext context) {
-    return Text('这里放文本内容',
-      style: TextStyle(//==============文本样式
-        color: Colors.blue,
-        fontSize: 16.0,
-        fontWeight: FontWeight.bold
+    /** 为了给整个布局加padding,所有套个container */
+    return Container(
+      padding: EdgeInsets.all(32),
+      child: Row(
+        children: <Widget>[
+          /** 为了让title沾满屏幕宽度的剩余空间，所有用Expanded包着 */
+          Expanded(
+            /** Expanded只能包含一个子元素。因此要用column来做 */
+            child: Column(
+              /** 让文本水平方向对齐start */
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Text(subtitle,
+                  style: TextStyle(color: Colors.grey[500]),
+                )
+              ],
+            ),
+          ),
+          Icon(
+            Icons.star,
+            color: Colors.red[500],
+          ),
+          Text(startCount.toString())
+        ],
       ),
     );
   }
-
 }
-
-/**
-* 图片 (网络，文件，资源，内存)
- * Image.asset(name)
- * Image.file(file);
- * Image.memory(bytes);
- * Image.network(src)
-*
-*/
-class ImageWidget extends StatelessWidget{
+class _MidWidget extends StatelessWidget{
+  final IconData icon;
+  final String text;
+  _MidWidget(this.icon,this.text);
   @override
   Widget build(BuildContext context) {
-//    return Image.network("https://www.baidu.com/img/superlogo_c4d7df0a003d3db9b65e9ef0fe6da1ec.png?where=super",
-//      width: 200,
-//      height:200,
-//    );
-  return Image.asset('image/star.png',
-          width: 200,
-          height: 200,
-
-  );
+    final color = Theme.of(context).primaryColor;
+      return Column(
+        /** main axis与cross axis相对应，竖直方向对齐 。*/
+        /** 放置完子控件后，屏幕还有剩余空间，min表示尽量少占用 .类似android的wrap_content*/
+        mainAxisSize: MainAxisSize.min,//max的话，那就是会在整个屏幕的中间。而min则整体都在屏幕的上面
+        /** 居中 */
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(icon,color:color),
+          Container(
+            margin: const EdgeInsets.only(top:8),
+            child: Text(
+              text,
+              style:TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color:color,
+              )
+            ),
+          )
+        ],
+      );
   }
 }
-
-/** 按钮 (flatButton与RaisedButton 类似)*/
-class MyButtonWidget extends StatelessWidget{
+class _TextSection extends StatelessWidget{
   @override
-  Widget build(BuildContext context) {
-    var flatBtn= FlatButton(
-      onPressed: ()=>print('Flatbutton pressed'),
-//      child: Text('BUTTON'),
-      child: new ImageWidget(),
-    );
-    var raisedButton = RaisedButton(
-      onPressed: ()=>print('RaisedButton pressed'),
-    /** child接收一个widget,可以是任意的  */
-//      child: Text('BUTTON'),
-    child: new ImageWidget(),
-    );
-//    return raisedButton;
-  return flatBtn;
-
-  }
-
-}
-
-/** 文本输入框 */
-/**
-* flutter中的文本输入框 叫做 TextField
-* 为了获得用户输入的文本，需要设置一个controller，从这个controller中拿到文本框的内容
-*/
-class MessageForm extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() {
-    return _MessageFormState();
-  }
-}
-class _MessageFormState extends State<MessageForm>{
-  var editController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        /** expanded 代表沾满一行里 除了RaisedButton外的所有空间 */
-        Expanded(child: TextField(controller: editController,),),
-        RaisedButton(
-          child: Text('click'),
-//          onPressed: ()=>print('text inputted: ${editController.text}'),
-          /** 显示弹框 */
-          onPressed: (){
-            showDialog(context: context,builder: (_){
-              return AlertDialog(
-                content: Text(editController.text),
-                actions: <Widget>[
-                  //点击按钮，关闭弹窗
-                  FlatButton(child: Text('ok'),onPressed: ()=>Navigator.pop(context),)
-                ],
-              );
-            });
-          },
-        )
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    editController.dispose();
-  }
-
-}
-
-/** 最简单的布局，container  padding Center */
-class MyLayoutWidget extends StatelessWidget{
-    @override
   Widget build(BuildContext context) {
      return Container(
-//       child: Text('text',style:TextStyle(color: Colors.white) ,),
-     child: Center(child: Text('text',style:TextStyle(color: Colors.white) ,),),
-       padding: EdgeInsets.all(8.0),
-       margin: EdgeInsets.all(4.0),
-       width: 80,
-       decoration: BoxDecoration(
-         color: Colors.blue,
-         borderRadius: BorderRadius.circular(5),
+       padding: const EdgeInsets.all(32),
+       child: Text(
+         '''
+         Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese Alps. Situated 1,578 meters above sea level, it is one of the larger Alpine Lakes. A gondola ride from Kandersteg, followed by a half-hour walk through pastures and pine forest, leads you to the lake, which warms to 20 degrees Celsius in the summer. Activities enjoyed here include rowing, and riding the summer toboggan run.
+
+         ''',
+         softWrap: true,
        ),
      );
   }
 }
-
-/** 水平，竖直布局和expand */
-class MyRowWidget extends StatelessWidget{
-    @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text('text1'),
-        Text('text2'),
-        Text('text3'),
-        Text('text4'),
-        Text('text5'),
-      ],
-    );
-  }
-}
-
-class MyColWidget extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-     return Column(
-       children: <Widget>[
-         Text('text1'),
-         Text('text2'),
-         Text('text3'),
-         Text('text4'),
-         Text('text5'),
-         Text('text6'),
-       ],
-     );
-  }
-}
-
-/** expand 可以设置fiex参数，划分比例占用空间。类似android 的weight 权重 */
-class MyExpandWidget extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-     return Row(
-       children: <Widget>[
-         Expanded(
-           flex:2, //==============占比全屏宽度的2/3
-           child: RaisedButton(child: Text('btn1'),onPressed: null,),
-         ),
-         Expanded(
-           flex: 1,
-           child: RaisedButton(child: Text('btn2'),onPressed: null),
-         )
-       ],
-     );
-  }
-}
-
-/** Stack布局 （一个控件跌在另一个控件上）*/
-class MyStackWidget extends StatelessWidget{
-    @override
-  Widget build(BuildContext context) {
-    return Stack(
-      /** aligment取值范围[-1,1]。stack中心为（0,0）下面0.5是让文本对齐到1/4处 */
-      alignment: const Alignment(-0.5, -0.5),
-      children: <Widget>[
-        Container(
-          width: 200,
-          height: 200,
-          color: Colors.blue,
-        ),
-        Text('foobar'),
-      ],
-    );
-  }
-}
-
-
-
