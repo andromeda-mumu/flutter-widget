@@ -7,6 +7,7 @@ import 'MessagePage.dart';
 /**
  * Created by wangjiao on 2020/3/10.
  * description: 消息列表
+ * 参考：https://juejin.im/post/5bf13747e51d4552ee424078#heading-20
  */
   void main()=>runApp(new MyApp());
   class MyApp extends StatelessWidget{

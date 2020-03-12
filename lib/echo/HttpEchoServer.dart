@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'Message.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:sqflite/sqflite.dart';
 /**
  * Created by wangjiao on 2020/3/12.
  * description: 服务器架构
@@ -13,7 +14,13 @@ class HttpEchoServer{
   static const GET ='GET';
   static const POST ='POST';
 
+
   String historyFilepath;
+  Database database;
+  static const tableName='history';
+  static const columnId='id';
+  static const columnMsg='msg';
+  static const columnTimestamp='timestamp';
 
 
    List<Message> messages =[];
@@ -35,9 +42,11 @@ class HttpEchoServer{
 
   /** 返回一个future,这样客户端可以在start后，做一些事*/
   Future start() async{
+    await _initDatabase();
     historyFilepath = await _historyPath();
     /** 在启动服务器前，先加载历史数据 */
-    await _loadMessages();
+//    await _loadFileMessages();
+    await _loadDbMessages();
 
     /** 创建一个httpServer*/
     httpServer = await HttpServer.bind(InternetAddress.loopbackIPv4, port);
@@ -56,8 +65,31 @@ class HttpEchoServer{
     });
   }
 
+  Future _initDatabase()async{
+    var path = await getDatabasesPath()+'/history.db';
+    database = await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db,version)async{
+        var sql = "CREATE TABLE $tableName($columnId INTEGER PRIMARY KEY,$columnMsg TEXT,$columnTimestamp INTEGER)";
+        await db.execute(sql);
+      }
+    );
+  }
+  /** 加载数据库数据 */
+  Future _loadDbMessages()async{
+     var list = await database.query(
+       tableName,
+       columns: [columnMsg,columnTimestamp],
+       orderBy: columnId,
+     );
+     for(var item in list){
+       var message = Message.fromJson(item);
+       messages.add(message);
+     }
+  }
   /** 加载本地 历史数据 */
-  Future _loadMessages()async{
+  Future _loadFileMessages()async{
     try{
       var file = File(historyFilepath);
       debugPrint('=====mmc= historypath : $historyFilepath');
@@ -72,7 +104,7 @@ class HttpEchoServer{
         messages.add(message);
       }
     }catch(e){
-      debugPrint('=====mmc= _loadMessages: $e');
+      debugPrint('=====mmc= _loadFileMessages: $e');
     }
   }
 
@@ -116,14 +148,20 @@ class HttpEchoServer{
        var data = json.encode(message);
        /** 写入相应体 */
        request.response.write(data);
-       _storeMessages();//==============保存历史数据
+//       _storeFileMessages();//==============保存历史数据
+     _storeDbMessages(message);
      }else{
        request.response.statusCode = HttpStatus.badRequest;
      }
      request.response.close();
   }
 
-  Future<bool> _storeMessages() async{
+  /** 保存记录到数据库。只需要把接收到的数据保存起来即可。*/
+  void _storeDbMessages(Message msg){
+    database.insert(tableName, msg.toJson());
+  }
+
+  Future<bool> _storeFileMessages() async{
     try{
       /** json.encode 支持list map */
       final data = json.encode(messages);
@@ -145,6 +183,11 @@ class HttpEchoServer{
     var server = httpServer;
     httpServer = null;
     await server?.close();
+
+    /** 关闭数据库 */
+    var db = database;
+    database = null;
+    db?.close();
   }
 
 }
