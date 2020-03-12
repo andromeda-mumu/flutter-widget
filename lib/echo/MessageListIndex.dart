@@ -70,7 +70,8 @@ HttpEchoClient _client;
     State<StatefulWidget> createState()=>new _MessageListState();
   }
 
-  class _MessageListState extends State<MessageList>{
+  /** 为了使用WidgetsBinding 这里继承WidgetsBindingObserver ，然后覆盖相应的方法 */
+  class _MessageListState extends State<MessageList> with WidgetsBindingObserver{
     final List<Message> messages=[];
    
     @override
@@ -89,7 +90,16 @@ HttpEchoClient _client;
           messages.addAll(list);
         });
       });
+       WidgetsBinding.instance.addObserver(this);
     });
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state==AppLifecycleState.paused){
+       var server =_server;//==============为什么这里要赋值一次，直接用_server.close 然后赋值为null。不行么
+       _server = null;
+       server?.close;
+    }
   }
 
     @override
