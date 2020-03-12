@@ -15,22 +15,43 @@ class HttpEchoClient{
   HttpEchoClient(this.port):host='http://localhost:$port';
 
   Future<Message> send(String msg)async{
-    debugPrint('=====mmc= send:$msg');
     /** 执行一个post请求，body参数是一个dynamic ,是任意类型。这里msg是string，所以post会自动设置Content-type=text/plain */
      final response = await http.post(host+'/echo',body: msg);
-    debugPrint('=====mmc= responseStatus${response.statusCode}');
+    debugPrint('=====mmc= send Status${response.statusCode}');
      if(response.statusCode ==200){
-       debugPrint('=====mmc= 请求成功');
+       debugPrint('=====mmc= send 请求成功');
        Map<String,dynamic> msgJson = json.decode(response.body);
-       debugPrint('=====mmc= msfJson$msgJson');
        /** json转对象 */
        var message = Message.fromJson(msgJson);
-       debugPrint('=====mmc= message$message');
        return message;
      }else{
        return null;
      }
 
+  }
+
+
+  Future<List<Message>> getHistory() async{
+    try{
+      final response = await http.get(host+'/history');
+      debugPrint('=====mmc= getHistory status ${response.statusCode}');
+      if(response.statusCode==200){
+        debugPrint('=====mmc= getHistory body ${response.body}');
+        return _decodeHistory(response.body);
+      }
+    }catch(e){
+      debugPrint('=====mmc= getHistory: $e');
+    }
+    return null;
+  }
+  List<Message> _decodeHistory(String response){
+    var messages = json.decode(response);
+    debugPrint('=====mmc= decode history :$messages');
+    var list = <Message>[];
+    for(var msgJson in messages){
+      list.add(Message.fromJson(msgJson));
+    }
+    return list;
   }
 
 }

@@ -36,21 +36,19 @@ import 'MessagePage.dart';
                floatingActionButton: FloatingActionButton(
                    onPressed: () async {
                     final result =  Navigator.push(context, MaterialPageRoute(builder: (_)=>AddMessageScreen()));//==============得到B页面发送的数据
-                    debugPrint('=====mmc result:$result');
                     /** 数据类型转换 */
                     if(_client==null)return;
                     /** 数据类型转换 */
                     result.then((msg){//==============第一步，这里要把result转成Message 
                       var ret = msg as Message;
-                      debugPrint('=====mmc= result is Message');
 //                      var ret = result as Message;//==============注意Future<T> 转成 T
-//                      var response = await _client.send(ret.msg);//=====await 错误，这里不能异步
+//                      var response = await _client.send(ret.msg);//=====await关键字，表示这是异步返回，等该异步任务执行成功了才会执行下一行代码
                       _client.send(ret.msg).then((response) { //==============因为onPressed函数不是async，所以不能直接使用await.这里改成then的方式来完成异步。
-                          debugPrint('=====mmc= 服务端返回值$response');
+//                          debugPrint('=====mmc= 服务端返回值$response');
                           if(response!=null){
                             /** 这里就是获得state,然后调用addMessage方法 */
                             /** 这里 future<T> 怎么转成 T */
-                            debugPrint('=====mmc= response：${response as Message}');//==============Message{msg:啦啦啦,timestamp:1583996239918}
+//                            debugPrint('=====mmc= response：${response as Message}');//==============Message{msg:啦啦啦,timestamp:1583996239918}
                             messageListKey.currentState.addMessage(response as Message);//==============将得到的数据添加到list中去
                           }else{
                             debugPrint('=====mmc= failed to send $response');
@@ -81,9 +79,16 @@ HttpEchoClient _client;
     const port = 6000;
     _server = HttpEchoServer(port);
     /** initState不是async函数，因此不能用await _server.start。 但是用futher.then(...)跟 await是等价的 */
-    _server.start().then((_) => {
+    _server.start().then((_){ //==============使用胖箭头 => 后面只跟一句话。如果多句号。不能使用胖箭头
       /** 等服务器启动 才能创建客户端 */
-       _client = HttpEchoClient(port)
+       _client = HttpEchoClient(port);
+      /** 客户端创建好后，立刻拿历史数据*/
+      _client.getHistory().then((list){
+        setState(() {
+          debugPrint('=====mmc= list :$list');
+          messages.addAll(list);
+        });
+      });
     });
   }
 
