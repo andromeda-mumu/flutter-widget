@@ -52,7 +52,7 @@ class TextWidget extends StatelessWidget{
 class TextWidget2 extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-      return GestureDetector(
+      return GestureDetector( /** 只要包裹上 GestureDetector 这样任何widget都可以有事件了*/
         child: Text('text'),
         onTap: ()=>debugPrint('click'),
       );

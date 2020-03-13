@@ -22,7 +22,8 @@ class BasicWidget extends StatelessWidget{
   Widget build(BuildContext context) {
    return  new MaterialApp(
       home: new HomePage(),
-      routes: {
+      theme: new ThemeData(primaryColor: Colors.deepOrange),
+      routes: { /** widget必须要用scaffold 包裹着，背景才是白色的。而且左上角还有个 返回键 。*/
         '/basic':(BuildContext context)=>new RandomWords(),
         '/basica':(BuildContext context)=>new MyContainer(),
         '/basica2':(BuildContext context)=>new TextOne(),
@@ -60,12 +61,13 @@ class _HomePageState extends State<HomePage>{
           child : new Card(
             child: new Padding(padding: EdgeInsets.all(10),child: Text(content),),
             elevation: 3.0,
-          )
+            margin: EdgeInsets.all(8.0),
+          ),
           );
         }
      return new Scaffold(
        appBar: new AppBar(title: new Text('home'),),
-       body:   new Column(children: <Widget>[
+       body:   new ListView(children: <Widget>[
          GetGestureDetector('/basic', '列表收藏'),
          GetGestureDetector('/basica', 'Container'),
          GetGestureDetector('/basica2', 'Text'),

@@ -36,6 +36,7 @@ import 'package:flutter/material.dart';
            fontSize: 30,
            color: Colors.yellow
          ),
+
        );
          return new Scaffold(
                appBar: AppBar(title: Text('text')),
@@ -161,7 +162,11 @@ import 'package:flutter/material.dart';
            )
          ],
        );
-       return new Center(child: flex);
+        return new Scaffold(
+              appBar: AppBar(title: Text('')),
+              body: new Center(child: flex)
+          );
+
    }
  }
 
