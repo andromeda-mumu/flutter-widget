@@ -13,13 +13,7 @@ class MyApp extends StatelessWidget{
       title: 'chloe',
       home: new Scaffold(
           appBar: new AppBar(title: Text('MyApp'),),
-          body :new Container(
-            child: AnimPaintWidget(),//==============注意，这里要使用container包着。不能直接body
-            height: 200,
-            width: 200,
-            color: Colors.deepOrange,
-            padding: EdgeInsets.all(30),
-          )
+          body :new AnimPaintWidget()
       ),
     );
   }
@@ -46,7 +40,7 @@ class _AnimPaintWidgetState extends State<AnimPaintWidget> with SingleTickerProv
   }
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(animation: _controller,builder: (context,child){
+    Widget anim = AnimatedBuilder(animation: _controller,builder: (context,child){
       return CustomPaint(painter: PainterDemo(
         /**
         * 把两个固定的start end，变成两个不固定的值。动画+动画的效果
@@ -64,5 +58,12 @@ class _AnimPaintWidgetState extends State<AnimPaintWidget> with SingleTickerProv
         )
       );
     });
+    return new Container(
+      child: anim,//==============注意，这里要使用container包着。不能直接body
+      height: 200,
+      width: 200,
+      color: Colors.deepOrange,
+      padding: EdgeInsets.all(30),
+    );
   }
 }

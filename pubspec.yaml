@@ -28,6 +28,7 @@ dependencies:
   sqflite: any #数据库
   path_provider: ^0.4.1 #文件持久化
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

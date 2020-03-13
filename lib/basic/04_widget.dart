@@ -11,14 +11,15 @@ import 'package:flutter/material.dart';
          title: 'chloe',
          home: new Scaffold(
            appBar: new AppBar(title: Text('组件与布局'),),
-           body :new Center(
+//           body :new Center(
 //               child: new TextOne(),
 //               child: new ImageOne(),
 //              child: new ContainerOne(),
 //           child: new FlexOne(),
 //           child: new FlexTwo(),
-           child: new StackOne(),
-           )
+//           child: new StackOne(),
+//           )
+         body: new FlexTwo(),
          ),
        );
    }
@@ -36,7 +37,10 @@ import 'package:flutter/material.dart';
            color: Colors.yellow
          ),
        );
-        return text;
+         return new Scaffold(
+               appBar: AppBar(title: Text('text')),
+               body:new Center(child: text)
+           );
    }
  }
 
@@ -61,12 +65,16 @@ import 'package:flutter/material.dart';
  class ImageOne extends StatelessWidget{
    @override
    Widget build(BuildContext context) {
-       return Image.network(
+       Widget img = Image.network(
          'https://gw.alicdn.com/tfs/TB1CgtkJeuSBuNjy1XcXXcYjFXa-906-520.png',
          fit: BoxFit.contain,
          width: 150,
          height: 100,
        );
+        return new Scaffold(
+              appBar: AppBar(title: Text('image')),
+              body: new Center(child: img,)
+          );
    }
  }
 
@@ -83,7 +91,7 @@ import 'package:flutter/material.dart';
  class ContainerOne extends StatelessWidget{
    @override
    Widget build(BuildContext context) {
-       return new Container(
+       Widget ct = new Container(
          alignment: Alignment.center,
          padding: const EdgeInsets.all(15),
          margin: const EdgeInsets.all(15),
@@ -103,6 +111,11 @@ import 'package:flutter/material.dart';
          ),
          child: Text(''),
        );
+
+       return new Scaffold(
+             appBar: AppBar(title: Text('')),
+             body:  new Center(child: ct)
+         );
    }
  }
 
@@ -117,7 +130,7 @@ import 'package:flutter/material.dart';
  class FlexOne extends StatelessWidget{
    @override
    Widget build(BuildContext context) {
-       return new Flex(
+       Widget flex=  new Flex(
          direction: Axis.horizontal,//==============类似android 的linerLayout vertical=horizontal
          mainAxisAlignment: MainAxisAlignment.center,
          crossAxisAlignment: CrossAxisAlignment.center,
@@ -148,6 +161,7 @@ import 'package:flutter/material.dart';
            )
          ],
        );
+       return new Center(child: flex);
    }
  }
 
@@ -155,7 +169,7 @@ import 'package:flutter/material.dart';
  class FlexTwo extends StatelessWidget{
    @override
    Widget build(BuildContext context) {
-       return new Flex(
+       Widget flex = new Flex(
          direction: Axis.horizontal,
          mainAxisAlignment: MainAxisAlignment.center,
          crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,6 +205,10 @@ import 'package:flutter/material.dart';
            )
          ],
        );
+        return new Scaffold(
+              appBar: AppBar(title: Text('')),
+              body: new Center(child:flex )
+          );
    }
  }
 
@@ -210,7 +228,7 @@ import 'package:flutter/material.dart';
  class StackOne extends StatelessWidget{
    @override
    Widget build(BuildContext context) {
-       return new Container(
+       Widget  stack = new Container(
          color: Colors.yellow,
          height: 150,
          width: 500,
@@ -235,5 +253,10 @@ import 'package:flutter/material.dart';
            )
          ],),
        );
+        return new Scaffold(
+              appBar: AppBar(title: Text('')),
+              body: new Center(child: stack)
+          );
+
    }
  }

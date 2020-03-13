@@ -1,0 +1,26 @@
+1.flutter的库是以package 的方式来管理的。
+    package分为两种：dart package | plugin package
+
+    当说flutter包，是指dart包。它只能使用Dart和flutter提供的API ，
+    而当说Flutter插件，指的是plugin package.
+
+    flutter插件通常会包含平台特定的代码。
+
+2:添加依赖
+    shared_preferences: ^0.4.2
+
+   ^0.4.2 指的是 与0.4.2兼容的版本。也可以指定特定版本：
+     | any     任意版本
+     | 1.2.3   特定版本
+     | <1.2.3   小于1.2.3的版本，此外还有 <= ,> ,>=
+     | '>=1.2.3 <2.0.0 ' 指定一个范围
+
+3.接下来，在项目根目录执行 flutter packages get 或者 点击  pacakges.get
+
+4.除了常用的pub.dartlang.org上面发布的库，还可以使用其他源
+    https://juejin.im/post/5c123e0c6fb9a049ff4dffbe#comment
+
+5.有时为了防止命名空间污染，需要使用 as 给导入的库一个新的名字
+
+https://juejin.im/post/5c123e0c6fb9a049ff4dffbe#comment
+https://mp.weixin.qq.com/s/4G6hWW6GxnmV_j6d2rVBpA

@@ -11,10 +11,7 @@ import 'dart:math' as math;
    Widget build(BuildContext context) {
        return new MaterialApp(
          title: 'chloe',
-         home: new Scaffold(
-           appBar: new AppBar(title: Text('Animation demo'),),
-           body : CustomAnimWidget()
-         ),
+         home: CustomAnimWidget()
        );
    }
  }
@@ -73,7 +70,7 @@ import 'dart:math' as math;
       final marginTop =(unitizedTop+1)*unit+padding;
 
       final color = this.color == null?Colors.red:this.color.value;
-      return Container(
+      Widget container =  Container(
         margin: EdgeInsets.only(left: marginLeft,top: marginTop),//==============这里实时获得新的left值
         child: Container(
           decoration: BoxDecoration(
@@ -85,6 +82,11 @@ import 'dart:math' as math;
           height: 15,
         ),
       );
+     return new Scaffold(
+          appBar: new AppBar(title: Text('Animation demo'),),
+          body : container
+      );
+
    }
 
    @override
